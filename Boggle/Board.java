@@ -3,7 +3,9 @@ import java.util.Random;
 public class Board {
 	
 	private int size;
-	private Square[][] board;
+
+
+	public Square[][] board;
 	
 	public Board(int size) {
 		this.size = size;
@@ -34,4 +36,9 @@ public class Board {
 		}
 		return boardString;
 	}
+	
+	public int getSize() {
+		return size;
+	}
+
 }
