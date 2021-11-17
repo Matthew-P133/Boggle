@@ -19,7 +19,7 @@ public class Board {
 		for (int row = 0; row < size; row++) {
 			for (int column = 0; column < size; column++) {
 				int x = r.nextInt(26);
-				Square s = new Square((char) (x + 65));
+				Square s = new Square((char) (x + 65), row, column);
 				board[row][column] = s;
 			}
 		}

@@ -38,8 +38,11 @@ public class GameUI extends JFrame {
 	}
 	
 	public static void main(String[] args) {
-		Board b = new Board(10);
+		
+		Board b = new Board(50);
+		WordEngine w = new WordEngine(b);
 		GameUI game = new GameUI(b);
 		game.setVisible(true);
+		
 	}
 }
