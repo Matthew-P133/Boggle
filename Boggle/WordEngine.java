@@ -12,36 +12,25 @@ public class WordEngine {
 	
 	public boolean validate(String word) {
 
-		HashMap<String, int[][]> relevantPairs;
-		relevantPairs = pairs;
-		if (relevantPairs == null) {
-			System.out.println("null");
-			return false;
-		}
-		// get list of first pair in word
-		
-		int[][] firstOccurrence = relevantPairs.get(word.substring(0, 2));
-		
-		if (firstOccurrence == null) {
-			return false;
-		}
-
-		// create data structure to keep track of used letters
+		if (pairs == null) return false;
+		int[][] pair = pairs.get(word.substring(0, 2));
+		if (pair == null) return false;
+	
 		String[] usedLetters = new String[2];
 
-		// look for word from each occurrence of first pair until found or exhausted possibilities
-		for (int i = 0; i < firstOccurrence.length; i++) {
-			int r = firstOccurrence[i][2];
-			int c = firstOccurrence[i][3];
-
-			String firstLetter = String.format("%d,%d", firstOccurrence[i][0], firstOccurrence[i][1]);
-			String secondLetter = String.format("%d,%d", firstOccurrence[i][2], firstOccurrence[i][3]);
+		// look for word from each occurrence of first pair until found word or exhausted possibilities
+		for (int i = 0; i < pair.length; i++) {
+			// row and column of second letter in pair
+			int row = pair[i][2];
+			int column = pair[i][3];
 
 			// add letters to used letters data structure
+			String firstLetter = String.format("%d,%d", pair[i][0], pair[i][1]);
+			String secondLetter = String.format("%d,%d", pair[i][2], pair[i][3]);
 			usedLetters[0] = firstLetter;
 			usedLetters[1] = secondLetter;
 
-			if (join(word, relevantPairs, 0, r, c, usedLetters)) {
+			if (find(word, pairs, 0, row, column, usedLetters)) {
 				return true;
 			}
 			// remove letters from used data structure
@@ -51,36 +40,32 @@ public class WordEngine {
 		return false;
 	}
 
-	private boolean join(String word, HashMap<String, int[][]> relevantPairs, int i, int r, int c,
+	private boolean find(String word, HashMap<String, int[][]> pairs, int index, int row, int column,
 			String[] usedLetters) {
 
-		String nextPair = word.substring(i + 1, i + 3);
-		int[][] nextOccurrence = relevantPairs.get(nextPair);
+		int[][] pair = pairs.get(word.substring(index + 1, index + 3));
 
-		for (int k = 0; k < nextOccurrence.length; k++) {
-			String letter = String.format("%d,%d", nextOccurrence[k][2], nextOccurrence[k][3]);
-			if (r == nextOccurrence[k][0] && c == nextOccurrence[k][1] && used(usedLetters, letter) == false) {
-				// add to used letters
+		for (int i = 0; i < pair.length; i++) {
+			String letter = String.format("%d,%d", pair[i][2], pair[i][3]);
+			if (row == pair[i][0] && column == pair[i][1] && !used(usedLetters, letter)) {
+				
 				usedLetters = use(usedLetters, letter);
-
-				if (i == word.length() - 3) {
-					for (int y = 0; y < usedLetters.length; y++) {
-						System.out.println(usedLetters[y]);
-					}
+				
+				if (index == word.length() - 3) {
 					return true;
 				}
-				if (join(word, relevantPairs, i + 1, nextOccurrence[k][2], nextOccurrence[k][3], usedLetters)) {
-
+				
+				if (find(word, pairs, index + 1, pair[i][2], pair[i][3], usedLetters)) {
 					return true;
 				}
-				// remove from used letters
+				
 				usedLetters = unuse(usedLetters, letter);
 			}
 		}
 		return false;
 	}
 	
-	private String[]  use(String[] usedLetters, String letter) {
+	private String[] use(String[] usedLetters, String letter) {
 		// increase size of array and add new letter to end
 		String[] temp = new String[usedLetters.length+1];
 		for (int i = 0; i < usedLetters.length; i++) {

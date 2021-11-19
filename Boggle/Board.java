@@ -3,8 +3,7 @@ import java.util.Random;
 public class Board {
 	
 	private int size;
-
-
+	
 	public Square[][] board;
 	
 	public Board(int size) {
