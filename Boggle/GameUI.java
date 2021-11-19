@@ -13,7 +13,7 @@ public class GameUI extends JFrame implements ActionListener{
 	
 	public GameUI() {
 		
-		Board b = new Board(8);
+		Board b = new Board(10);
 		w = new WordEngine(b);
 		
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);

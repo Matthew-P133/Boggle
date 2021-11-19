@@ -2,7 +2,7 @@ import java.util.HashMap;
 
 public class WordEngine {
 	
-	private HashMap<String, String[]> pairs;
+	private HashMap<String, int[][]> pairs;
 	
 	public WordEngine(Board board) {
 		// parse board into data structure containing letter pair information
@@ -13,13 +13,18 @@ public class WordEngine {
 	public boolean validate(String word) {
 
 		HashMap<String, int[][]> relevantPairs;
-		relevantPairs = this.getRelevantPairs(word);
+		relevantPairs = pairs;
 		if (relevantPairs == null) {
 			System.out.println("null");
 			return false;
 		}
 		// get list of first pair in word
+		
 		int[][] firstOccurrence = relevantPairs.get(word.substring(0, 2));
+		
+		if (firstOccurrence == null) {
+			return false;
+		}
 
 		// create data structure to keep track of used letters
 		String[] usedLetters = new String[2];
@@ -106,30 +111,8 @@ public class WordEngine {
 	}
 	
 	
-	public HashMap<String, int[][]> getRelevantPairs(String word) {
-		HashMap<String, int[][]> relevantPairs = new HashMap<String, int[][]>();
-		
-		String pair;
-		for (int letterIndex = 0; letterIndex < word.length()-1; letterIndex++) {
-			pair = word.substring(letterIndex, letterIndex+2);
-			String[] occurrences = this.pairs.get(pair);
-			if (occurrences == null) {
-				return null;
-			}
-			int[][] currentPair = new int[occurrences.length][4];
-			for (int i = 0; i < occurrences.length; i++) {
-				String[] stringDigits = occurrences[i].split(",");
-				for (int j = 0; j < 4; j++) {
-					currentPair[i][j] = Integer.parseInt(stringDigits[j]);
-				}	
-			}
-			relevantPairs.put(pair, currentPair);
-		}
-		return relevantPairs;
-	}
-	
-	public HashMap<String, String[]> findPairs(Board b) {
-		HashMap<String, String[]> pairs = new HashMap<String, String[]>();
+	public HashMap<String, int[][]> findPairs(Board b) {
+		HashMap<String, int[][]> pairs = new HashMap<String, int[][]>();
 		int size = b.getSize();
 		
 		// for each square in Board loop over adjacent squares and add letter pair information to HashMap
@@ -141,17 +124,18 @@ public class WordEngine {
 								&& !((i == row) && (j == column))) {
 							
 							String pair = String.format("%s%s", b.board[row][column].toString(), b.board[i][j].toString());
-							String positions = String.format("%d,%d,%d,%d", row, column, i, j);
+							int[] positions =  new int[] {row, column, i, j};
 							
 							// if letter pair not already in HashMap then make an entry
 							if (!(pairs.containsKey(pair))) {
-								String[] s = new String[] {positions};
+								int[][] s = new int[1][1];
+								s[0] = positions;
 								pairs.put(pair, s);
 							}
 							// if letter pair already in HashMap add position to end of value array
 							else {
-								String[] temp = pairs.get(pair);
-								String[] s = new String[temp.length + 1];
+								int[][] temp = pairs.get(pair);
+								int[][] s = new int[temp.length+1][4];
 								for (int m = 0; m < temp.length; m++) {
 									s[m] = temp[m];
 								}
