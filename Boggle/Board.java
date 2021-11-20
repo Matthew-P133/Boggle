@@ -39,4 +39,14 @@ public class Board {
 		return size;
 	}
 
+	public void reset() {
+		for (int row = 0; row < size; row++) {
+			for (int column = 0; column < size; column++) {
+				Square s = board[row][column];
+				if (s.isUsed()) {
+					s.setUnused();
+				}
+			}
+		}
+	}
 }

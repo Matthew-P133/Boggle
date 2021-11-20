@@ -7,8 +7,10 @@ public class BogglePanel extends JPanel {
 	
 	protected JTextField input;
 	protected JTextField message;
+	private Board b;
 	
 	public BogglePanel(ActionListener parent, Board b) {
+		this.b = b;
 		this.setLayout(new GridLayout(3,1));
 		
 		JPanel grid = new JPanel();
@@ -16,11 +18,14 @@ public class BogglePanel extends JPanel {
 		// add each square in board to a JPanel
 		for (int row = 0; row < b.getSize(); row++) {
 			for (int column = 0; column < b.getSize(); column++) {
-				JTextField square = new JTextField(b.board[row][column].toString());
+				Square s = b.board[row][column];
+				JTextField square = new JTextField(s.toString());
+				s.setUIRef(square);
 				square.setEditable(false);
 				grid.add(square);
 			}
 		}
+		
 		
 		//create a JPanel for input
 		JPanel control = new JPanel();
@@ -29,7 +34,7 @@ public class BogglePanel extends JPanel {
 		input = new JTextField(15);
 		input.setEditable(true);
 		input.addActionListener(parent);
-		message = new JTextField(15);
+		message = new JTextField(25);
 		message.setText("Let's play BOGGLE");
 		message.setEditable(false);
 		
@@ -39,8 +44,20 @@ public class BogglePanel extends JPanel {
 		
 
 		this.add(grid);
-		this.add(control);
+		this.add(control);	
+	}
 	
-		
+	public void highlightWord(Color color) {
+		for (int row = 0; row < b.getSize(); row++) {
+			for (int column = 0; column < b.getSize(); column++) {
+				Square s = b.board[row][column];
+				if (s.isUsed()) {
+					s.getUIRef().setBackground(color);
+				}
+				else {
+					s.getUIRef().setBackground(Color.WHITE);
+				}
+			}
+		}
 	}
 }

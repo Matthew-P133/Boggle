@@ -4,69 +4,84 @@ import java.util.ArrayList;
 public class WordEngine {
 	
 	private HashMap<String, ArrayList<int[]>> pairs;
+	private Board b;
 	
 	public WordEngine(Board board) {
 		// parse board into data structure containing letter pair information
+		b = board;
 		pairs = findPairs(board);
 	}
 	
+	public int score(String word) {
+		int score = 0;
+		int length = word.length();
+		if (length >= 3 && length <= 4) {
+			score = 1;
+		}
+		else if (length == 5) {
+			score = 2;			
+		}
+		else if (length == 6) {
+			score = 3;			
+		}
+		else if (length == 7) {
+			score = 4;			
+		}
+		else if (length > 7) {
+			score = 11;
+		}
+		return score;
+	}
 	
 	public boolean validate(String word) {
 
 		if (pairs == null) return false;
 		ArrayList<int[]> pair = pairs.get(word.substring(0, 2));
 		if (pair == null) return false;
-	
-		ArrayList<String> usedLetters = new ArrayList<String>();
 
 		// look for word from each occurrence of first pair until found word or exhausted possibilities
 		for (int i = 0; i < pair.size(); i++) {
 			
 			int[] pairInstance = pair.get(i);
 			
-			// row and column of second letter in pair
-			int row = pairInstance[2];
-			int column = pairInstance[3];
+			Square firstLetter = b.board[pairInstance[0]][pairInstance[1]];
+			Square secondLetter = b.board[pairInstance[2]][pairInstance[3]];
 
-			// add letters to used letters data structure
-			String firstLetter = String.format("%d,%d", pairInstance[0], pairInstance[1]);
-			String secondLetter = String.format("%d,%d", pairInstance[2], pairInstance[3]);
-			usedLetters.add(firstLetter);
-			usedLetters.add(secondLetter);
+			firstLetter.setUsed();
+			secondLetter.setUsed();
 
-			if (find(word, pairs, 0, row, column, usedLetters)) {
+			if (find(word, pairs, 0, secondLetter.getRow(), secondLetter.getColumn())) {
 				return true;
 			}
-			// remove letters from used data structure
-			usedLetters.remove(usedLetters.size()-1);
-			usedLetters.remove(usedLetters.size()-1);
+
+			firstLetter.setUnused();
+			secondLetter.setUnused();
 		}
 		return false;
 	}
 
-	private boolean find(String word, HashMap<String, ArrayList<int[]>> pairs, int index, int row, int column,
-			ArrayList<String> usedLetters) {
+	private boolean find(String word, HashMap<String, ArrayList<int[]>> pairs, int index, int row, int column) {
 
 		ArrayList<int[]> pair = pairs.get(word.substring(index + 1, index + 3));
+		if (pair == null) {return false;}
 
 		for (int i = 0; i < pair.size(); i++) {
 			
 			int[] pairInstance = pair.get(i);
-			String letter = String.format("%d,%d", pairInstance[2], pairInstance[3]);
 			
-			if (row == pairInstance[0] && column == pairInstance[1] && !usedLetters.contains(letter)) {
+			Square firstLetter = b.board[pairInstance[0]][pairInstance[1]];
+			Square secondLetter = b.board[pairInstance[2]][pairInstance[3]];
+			
+			if (row == firstLetter.getRow() && column == firstLetter.getColumn() && !secondLetter.isUsed()) {
 				
-				usedLetters.add(letter);
-				
+				secondLetter.setUsed();
 				if (index == word.length() - 3) {
 					return true;
 				}
-				
-				if (find(word, pairs, index + 1, pairInstance[2], pairInstance[3], usedLetters)) {
+				if (find(word, pairs, index + 1, secondLetter.getRow(), secondLetter.getColumn())) {
 					return true;
 				}
-				
-				usedLetters.remove(usedLetters.size()-1);
+				secondLetter.setUnused();
 			}
 		}
 		return false;
@@ -107,5 +122,6 @@ public class WordEngine {
 		}
 		return pairs;
 	}
+	
 	
 }

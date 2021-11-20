@@ -11,20 +11,27 @@ public class GameUI extends JFrame implements ActionListener{
 	private JTextField message;
 	private BogglePanel panel = new BogglePanel(this, b);
 	
-	
 	public GameUI() {
 		
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		this.setSize(500,300);
+		this.setSize(600,300);
 		this.setLayout(new FlowLayout());	
 		this.add(panel);	
 	}
 	
 	// when user enters a word
 	public void actionPerformed(ActionEvent e) {
+			b.reset();
 			String word = panel.input.getText();
 			boolean valid = w.validate(word);
-			panel.message.setText("" + valid);	
+			if (valid) {
+				panel.message.setText(word + " is valid. Score: " + w.score(word) + " points!");
+				panel.highlightWord(Color.GREEN);
+			}
+			else {
+				panel.message.setText(word + " not present. Score: " + 0 + " points!");
+				panel.highlightWord(Color.WHITE);
+			}	
 	}
 	
 	public static void main(String[] args) {
