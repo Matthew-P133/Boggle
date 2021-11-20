@@ -6,59 +6,25 @@ import java.awt.*;
 public class GameUI extends JFrame implements ActionListener{
 	
 	private JTextField input;
-	private Board b;
-	private WordEngine w;
+	private Board b = new Board(10);
+	private WordEngine w = new WordEngine(b);
 	private JTextField message;
+	private BogglePanel panel = new BogglePanel(this, b);
 	
 	
 	public GameUI() {
 		
-		Board b = new Board(10);
-		w = new WordEngine(b);
-		
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		this.setSize(400,400);
-		this.setLayout(new FlowLayout());
-
-		JPanel grid = new JPanel();
-		grid.setLayout(new GridLayout(b.getSize(),b.getSize()));
-		
-		// add each square in board to a JPanel
-		for (int row = 0; row < b.getSize(); row++) {
-			for (int column = 0; column < b.getSize(); column++) {
-				JTextField square = new JTextField(b.board[row][column].toString());
-				square.setEditable(false);
-				grid.add(square);
-			}
-		}
-		
-		//create a JPanel for input
-		JPanel control = new JPanel();
-		control.setLayout(new FlowLayout());
-		JLabel prompt = new JLabel("Enter a word");
-		input = new JTextField(15);
-		input.setEditable(true);
-		input.addActionListener(this);
-		control.add(prompt);
-		control.add(input);
-		
-		message = new JTextField(15);
-		message.setText("Let's play BOGGLE");
-		message.setEditable(false);
-	
-		this.add(grid);
-		this.add(control);
-		this.add(message);
-		
-		
-		
+		this.setSize(500,300);
+		this.setLayout(new FlowLayout());	
+		this.add(panel);	
 	}
 	
 	// when user enters a word
 	public void actionPerformed(ActionEvent e) {
-			String word = input.getText();
+			String word = panel.input.getText();
 			boolean valid = w.validate(word);
-			message.setText("" + valid);	
+			panel.message.setText("" + valid);	
 	}
 	
 	public static void main(String[] args) {

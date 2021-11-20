@@ -72,7 +72,6 @@ public class WordEngine {
 		return false;
 	}
 	
-	
 	public HashMap<String, ArrayList<int[]>> findPairs(Board b) {
 		HashMap<String, ArrayList<int[]>> pairs = new HashMap<String, ArrayList<int[]>>();
 		int size = b.getSize();
@@ -91,7 +90,6 @@ public class WordEngine {
 							// if letter pair not already in HashMap then make an entry
 							if (!(pairs.containsKey(pair))) {
 								ArrayList<int[]> s = new ArrayList<int[]>();
-								
 								s.add(positions);
 								pairs.put(pair, s);
 							}
