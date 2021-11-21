@@ -40,7 +40,7 @@ public class Square {
 	public JTextField getUIRef() {
 		return UIRef;
 	}
-	public void setUIRef(JTextField t) {
-		this.UIRef = t;
+	public void setUIRef(JTextField textfield) {
+		this.UIRef = textfield;
 	}
 }

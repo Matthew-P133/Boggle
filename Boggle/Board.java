@@ -20,8 +20,8 @@ public class Board {
 		for (int row = 0; row < size; row++) {
 			for (int column = 0; column < size; column++) {
 				int x = r.nextInt(26);
-				Square s = new Square((char) (x + 65), row, column);
-				board[row][column] = s;
+				Square square = new Square((char) (x + 65), row, column);
+				board[row][column] = square;
 			}
 		}
 		return board;
@@ -44,9 +44,9 @@ public class Board {
 	public void reset() {
 		for (int row = 0; row < size; row++) {
 			for (int column = 0; column < size; column++) {
-				Square s = board[row][column];
-				if (s.isUsed()) {
-					s.setUnused();
+				Square square = board[row][column];
+				if (square.isUsed()) {
+					square.setUnused();
 				}
 			}
 		}

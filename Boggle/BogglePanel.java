@@ -8,22 +8,22 @@ public class BogglePanel extends JPanel {
 	protected JTextField input;
 	protected JTextField message;
 	protected JButton button;
-	private Board b;
+	private Board board;
 	
-	public BogglePanel(ActionListener parent, Board b) {
-		this.b = b;
+	public BogglePanel(ActionListener parent, Board board) {
+		this.board = board;
 		this.setLayout(new GridLayout(2,1));
 		
 		// set up JPanel for board
 		JPanel grid = new JPanel();
-		grid.setLayout(new GridLayout(b.getSize(),b.getSize()));
-		for (int row = 0; row < b.getSize(); row++) {
-			for (int column = 0; column < b.getSize(); column++) {
-				Square s = b.board[row][column];
-				JTextField square = new JTextField(s.toString());
-				s.setUIRef(square);
-				square.setEditable(false);
-				grid.add(square);
+		grid.setLayout(new GridLayout(board.getSize(),board.getSize()));
+		for (int row = 0; row < board.getSize(); row++) {
+			for (int column = 0; column < board.getSize(); column++) {
+				Square square = board.board[row][column];
+				JTextField letter = new JTextField(square.toString());
+				square.setUIRef(letter);
+				letter.setEditable(false);
+				grid.add(letter);
 			}
 		}
 		
@@ -53,14 +53,14 @@ public class BogglePanel extends JPanel {
 	
 	// highlights word in the specified colour
 	public void highlightWord(Color color) {
-		for (int row = 0; row < b.getSize(); row++) {
-			for (int column = 0; column < b.getSize(); column++) {
-				Square s = b.board[row][column];
-				if (s.isUsed()) {
-					s.getUIRef().setBackground(color);
+		for (int row = 0; row < board.getSize(); row++) {
+			for (int column = 0; column < board.getSize(); column++) {
+				Square square = board.board[row][column];
+				if (square.isUsed()) {
+					square.getUIRef().setBackground(color);
 				}
 				else {
-					s.getUIRef().setBackground(Color.WHITE);
+					square.getUIRef().setBackground(Color.WHITE);
 				}
 			}
 		}

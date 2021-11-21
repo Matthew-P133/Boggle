@@ -12,35 +12,36 @@ public class Dictionary {
 	}
 	
 	
-	// reads wordlist.txt into a HashSet used by other classes for word validation
+	// reads wordlist into a HashSet used by other classes for word validation
 	public HashSet<String> makeDictionary() {
 		
 		HashSet<String> dictionary = new HashSet<String>();
-		FileReader fr = null;
-		String fp = System.getProperty("user.dir") + "\\wordlist";
+		FileReader fileReader = null;
+		String filePath = System.getProperty("user.dir") + "\\wordlist";
 		
 		try {
-			fr = new FileReader(fp);
+			fileReader = new FileReader(filePath);
 		} 
-		catch (FileNotFoundException e) {
-			e.printStackTrace();
+		catch (FileNotFoundException exception) {
+			exception.printStackTrace();
 		}
 		
-		Scanner s = new Scanner(fr);
-		while (s.hasNextLine()) {
-			String word = s.nextLine();
+		Scanner scanner = new Scanner(fileReader);
+		while (scanner.hasNextLine()) {
+			String word = scanner.nextLine();
 			word = word.toUpperCase().strip();
 			if (word.length() > 2) {
 			dictionary.add(word);
 			}
 		}
+		scanner.close();
 		return dictionary;
 	}
 	
 	
 	// returns true if a word is valid
-	public boolean hasWord(String s) {
-		if (this.dictionary.contains(s)) {
+	public boolean hasWord(String word) {
+		if (this.dictionary.contains(word)) {
 			return true;
 		}
 		return false;

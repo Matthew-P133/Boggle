@@ -4,13 +4,13 @@ import java.util.ArrayList;
 public class WordEngine {
 	
 	private HashMap<String, ArrayList<int[]>> pairs;
-	private Board b;
-	private Dictionary d;
+	private Board board;
+	private Dictionary dictionary;
 	
-	public WordEngine(Board board, Dictionary d) {
-		b = board;
+	public WordEngine(Board board, Dictionary dictionary) {
+		this.board = board;
 		pairs = findPairs(board);
-		this.d = d;
+		this.dictionary = dictionary;
 	}
 	
 
@@ -27,8 +27,8 @@ public class WordEngine {
 		for (int i = 0; i < pair.size(); i++) {
 			int[] pairInstance = pair.get(i);
 			
-			Square firstLetter = b.board[pairInstance[0]][pairInstance[1]];
-			Square secondLetter = b.board[pairInstance[2]][pairInstance[3]];
+			Square firstLetter = board.board[pairInstance[0]][pairInstance[1]];
+			Square secondLetter = board.board[pairInstance[2]][pairInstance[3]];
 			firstLetter.setUsed();
 			secondLetter.setUsed();
 			
@@ -54,8 +54,8 @@ public class WordEngine {
 			
 			int[] pairInstance = pair.get(i);
 			
-			Square firstLetter = b.board[pairInstance[0]][pairInstance[1]];
-			Square secondLetter = b.board[pairInstance[2]][pairInstance[3]];
+			Square firstLetter = board.board[pairInstance[0]][pairInstance[1]];
+			Square secondLetter = board.board[pairInstance[2]][pairInstance[3]];
 			
 			if (row == firstLetter.getRow() && column == firstLetter.getColumn() && !secondLetter.isUsed()) {
 				
@@ -74,9 +74,9 @@ public class WordEngine {
 	
 	
 	// generates data structure containing information about all letter pairs in the board
-	public HashMap<String, ArrayList<int[]>> findPairs(Board b) {
+	public HashMap<String, ArrayList<int[]>> findPairs(Board board) {
 		HashMap<String, ArrayList<int[]>> pairs = new HashMap<String, ArrayList<int[]>>();
-		int size = b.getSize();
+		int size = board.getSize();
 		
 		// for each square in Board loop over adjacent squares and add letter pair information to HashMap
 		for (int row = 0; row < size; row++) {
@@ -86,20 +86,20 @@ public class WordEngine {
 						if ((i >= 0 && j >= 0) && (i <= size - 1 && j <= size - 1)
 								&& !((i == row) && (j == column))) {
 							
-							String pair = String.format("%s%s", b.board[row][column].toString(), b.board[i][j].toString());
+							String pair = String.format("%s%s", board.board[row][column].toString(), board.board[i][j].toString());
 							int[] positions =  new int[] {row, column, i, j};
 							
 							// if letter pair not already in HashMap then make an entry
 							if (!(pairs.containsKey(pair))) {
-								ArrayList<int[]> s = new ArrayList<int[]>();
-								s.add(positions);
-								pairs.put(pair, s);
+								ArrayList<int[]> occurrences = new ArrayList<int[]>();
+								occurrences.add(positions);
+								pairs.put(pair, occurrences);
 							}
 							// if letter pair already in HashMap add position to end of value list
 							else {
-								ArrayList<int[]> s = pairs.get(pair);
-								s.add(positions);
-								pairs.replace(pair, s);
+								ArrayList<int[]> occurrences = pairs.get(pair);
+								occurrences.add(positions);
+								pairs.replace(pair, occurrences);
 							}
 						}
 					}
@@ -113,7 +113,7 @@ public class WordEngine {
 	
 	// check is a word is in the dictionary
 	public boolean inDict(String word) {
-		if (d.hasWord(word)) {
+		if (dictionary.hasWord(word)) {
 			return true;
 		}
 		return false;
