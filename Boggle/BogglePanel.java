@@ -7,15 +7,16 @@ public class BogglePanel extends JPanel {
 	
 	protected JTextField input;
 	protected JTextField message;
+	protected JButton button;
 	private Board b;
 	
 	public BogglePanel(ActionListener parent, Board b) {
 		this.b = b;
-		this.setLayout(new GridLayout(3,1));
+		this.setLayout(new GridLayout(2,1));
 		
+		// set up JPanel for board
 		JPanel grid = new JPanel();
 		grid.setLayout(new GridLayout(b.getSize(),b.getSize()));
-		// add each square in board to a JPanel
 		for (int row = 0; row < b.getSize(); row++) {
 			for (int column = 0; column < b.getSize(); column++) {
 				Square s = b.board[row][column];
@@ -26,8 +27,7 @@ public class BogglePanel extends JPanel {
 			}
 		}
 		
-		
-		//create a JPanel for input
+		// set up JPanel for user interaction
 		JPanel control = new JPanel();
 		control.setLayout(new FlowLayout());
 		JLabel prompt = new JLabel("Enter a word");
@@ -37,16 +37,21 @@ public class BogglePanel extends JPanel {
 		message = new JTextField(25);
 		message.setText("Let's play BOGGLE");
 		message.setEditable(false);
+		button = new JButton("Find All");
+		button.addActionListener(parent);
 		
 		control.add(prompt);
 		control.add(input);
 		control.add(message);
-		
+		control.add(button);
 
+		// add both JPanels to overall JPanel
 		this.add(grid);
-		this.add(control);	
+		this.add(control);		
 	}
 	
+	
+	// highlights word in the specified colour
 	public void highlightWord(Color color) {
 		for (int row = 0; row < b.getSize(); row++) {
 			for (int column = 0; column < b.getSize(); column++) {

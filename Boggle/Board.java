@@ -5,11 +5,14 @@ public class Board {
 	private int size;
 	public Square[][] board;
 	
+	
 	public Board(int size) {
 		this.size = size;
 		board = populate();
 	}
 	
+	
+	// fill boggle grid of specified size with random characters between 'A'-'Z'
 	private Square[][] populate() {
 		Square[][] board = new Square[size][size];
 		Random r = new Random();
@@ -24,6 +27,7 @@ public class Board {
 		return board;
 	}
 	
+	
 	public String toString() {
 		String boardString = "";
 		for (int row = 0; row < size; row++) {
@@ -35,10 +39,8 @@ public class Board {
 		return boardString;
 	}
 	
-	public int getSize() {
-		return size;
-	}
-
+	
+	// resets used attribute of all squares in board to false
 	public void reset() {
 		for (int row = 0; row < size; row++) {
 			for (int column = 0; column < size; column++) {
@@ -48,5 +50,11 @@ public class Board {
 				}
 			}
 		}
+	}
+	
+	
+	//getters and setters
+	public int getSize() {
+		return size;
 	}
 }

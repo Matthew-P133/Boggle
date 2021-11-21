@@ -5,63 +5,48 @@ public class WordEngine {
 	
 	private HashMap<String, ArrayList<int[]>> pairs;
 	private Board b;
+	private Dictionary d;
 	
-	public WordEngine(Board board) {
-		// parse board into data structure containing letter pair information
+	public WordEngine(Board board, Dictionary d) {
 		b = board;
 		pairs = findPairs(board);
+		this.d = d;
 	}
 	
-	public int score(String word) {
-		int score = 0;
-		int length = word.length();
-		if (length >= 3 && length <= 4) {
-			score = 1;
-		}
-		else if (length == 5) {
-			score = 2;			
-		}
-		else if (length == 6) {
-			score = 3;			
-		}
-		else if (length == 7) {
-			score = 4;			
-		}
-		else if (length > 7) {
-			score = 11;
-		}
-		return score;
-	}
-	
+
+	/*
+	 *  starting from each occurrence of first pair in word, make call to find
+	 *  until word is found or starting points are exhausted (word not present)
+	 */
 	public boolean validate(String word) {
 
 		if (pairs == null) return false;
 		ArrayList<int[]> pair = pairs.get(word.substring(0, 2));
 		if (pair == null) return false;
 
-		// look for word from each occurrence of first pair until found word or exhausted possibilities
 		for (int i = 0; i < pair.size(); i++) {
-			
 			int[] pairInstance = pair.get(i);
 			
 			Square firstLetter = b.board[pairInstance[0]][pairInstance[1]];
 			Square secondLetter = b.board[pairInstance[2]][pairInstance[3]];
-
 			firstLetter.setUsed();
 			secondLetter.setUsed();
-
+			
 			if (find(word, pairs, 0, secondLetter.getRow(), secondLetter.getColumn())) {
 				return true;
 			}
-
+			
 			firstLetter.setUnused();
 			secondLetter.setUnused();
 		}
 		return false;
 	}
 
+	
+	// recursive function to check if a word is present  
 	private boolean find(String word, HashMap<String, ArrayList<int[]>> pairs, int index, int row, int column) {
 
+		// set pair to next pair
 		ArrayList<int[]> pair = pairs.get(word.substring(index + 1, index + 3));
 		if (pair == null) {return false;}
 
@@ -87,6 +72,8 @@ public class WordEngine {
 		return false;
 	}
 	
+	
+	// generates data structure containing information about all letter pairs in the board
 	public HashMap<String, ArrayList<int[]>> findPairs(Board b) {
 		HashMap<String, ArrayList<int[]>> pairs = new HashMap<String, ArrayList<int[]>>();
 		int size = b.getSize();
@@ -108,7 +95,7 @@ public class WordEngine {
 								s.add(positions);
 								pairs.put(pair, s);
 							}
-							// if letter pair already in HashMap add position to end of value array
+							// if letter pair already in HashMap add position to end of value list
 							else {
 								ArrayList<int[]> s = pairs.get(pair);
 								s.add(positions);
@@ -124,4 +111,34 @@ public class WordEngine {
 	}
 	
 	
+	// check is a word is in the dictionary
+	public boolean inDict(String word) {
+		if (d.hasWord(word)) {
+			return true;
+		}
+		return false;
+	}
+	
+	
+	// get boggle score of a given word
+	public int score(String word) {
+		int score = 0;
+		int length = word.length();
+		if (length >= 3 && length <= 4) {
+			score = 1;
+		}
+		else if (length == 5) {
+			score = 2;			
+		}
+		else if (length == 6) {
+			score = 3;			
+		}
+		else if (length == 7) {
+			score = 4;			
+		}
+		else if (length > 7) {
+			score = 11;
+		}
+		return score;
+	}	
 }

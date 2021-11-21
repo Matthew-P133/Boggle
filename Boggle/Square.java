@@ -14,6 +14,7 @@ public class Square {
 		this.column = column;
 	}
 	
+	// getters and setters
 	public String toString() {
 		return "" + letter;
 	}
